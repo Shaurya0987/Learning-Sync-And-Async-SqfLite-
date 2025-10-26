@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart'; // ✅ correct import
+import 'package:sqflite/sqflite.dart'; 
 
 class DatabaseHelper {
   // Step 1 --> Singleton
@@ -37,4 +37,34 @@ class DatabaseHelper {
   }
 
   // Step 5 --> Insert A Note
+  Future<int>insert(Map<String,dynamic>row)async{
+    final db =await instance.database;
+    return await db.insert("notes", row);
+  }
+
+  // Step 6 --> Read All Notes
+  Future<List<Map<String,dynamic>>>getAllNotes() async{
+    final db= await instance.database;
+    return await db.query('notes');
+  }
+
+  // Step 7 --> Update a Note
+  Future<int>Update(Map<String,dynamic>row) async{
+    final db=await instance.database;
+    int id=row['id'];
+    return await db.update('notes', row,where: 'id=?',whereArgs: [id]);
+  }
+
+  // Step 8 --> Delete a Note
+  Future<int>Delete(int id) async{
+    final db = await instance.database;
+    return await db.delete('notes',where: 'id=?',whereArgs: [id]);
+  }
+
+  // Step 9 --> Close the DataBase
+  Future Close() async{
+    final db = await instance.database;
+    db.close();
+  }
+  
 }
