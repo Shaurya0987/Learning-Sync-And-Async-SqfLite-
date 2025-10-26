@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,8 +10,12 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Text("Hiii"),
+    
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "flutter Demo-Async",
+      home: Scaffold(),
     );
   }
 
