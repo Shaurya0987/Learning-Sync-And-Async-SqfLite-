@@ -1,6 +1,6 @@
 import 'package:LearningLocalStorage/data/local/database.dart';
 import 'package:flutter/material.dart';
-import 'database_helper.dart'; // Import your database helper
+import 'database_helper.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -15,10 +15,10 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    _refreshNotes(); // Fetch notes when screen opens
+    _refreshNotes();
   }
 
-  // Fetch all notes from database
+  // Fetch all notes
   Future<void> _refreshNotes() async {
     final data = await DatabaseHelper.instance.getAllNotes();
     setState(() {
@@ -26,7 +26,7 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  // Add a new note
+  // Add Note
   Future<void> _addNote() async {
     TextEditingController titleController = TextEditingController();
     TextEditingController descriptionController = TextEditingController();
@@ -53,14 +53,14 @@ class _HomepageState extends State<Homepage> {
             onPressed: () async {
               if (titleController.text.isNotEmpty &&
                   descriptionController.text.isNotEmpty) {
-                // Insert into database
                 await DatabaseHelper.instance.insert({
                   'title': titleController.text,
                   'description': descriptionController.text,
                 });
-
-                Navigator.pop(context); // Close dialog
-                await _refreshNotes(); // Refresh UI
+                titleController.clear();
+                descriptionController.clear();
+                Navigator.pop(context);
+                await _refreshNotes();
               }
             },
             child: const Text("Save"),
@@ -70,19 +70,22 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  // Delete a note
+  // Delete Note
   Future<void> _deleteNote(int id) async {
-    await DatabaseHelper.instance.Delete(id); // lowercase delete
-    await _refreshNotes(); // Refresh after deletion
+    await DatabaseHelper.instance.delete(id);
+    await _refreshNotes();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Notes"),
+        title: const Text(
+          'Notes App',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.orange.shade300,
+        backgroundColor: Colors.orange,
       ),
       body: notes.isEmpty
           ? const Center(
@@ -96,8 +99,8 @@ class _HomepageState extends State<Homepage> {
               itemBuilder: (context, index) {
                 final note = notes[index];
                 return Card(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8, horizontal: 12),
                   elevation: 3,
                   child: ListTile(
                     title: Text(
